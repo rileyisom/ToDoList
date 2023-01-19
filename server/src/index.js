@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const mongoose = require('mongoose');
 
 const router = require('./router');
 
@@ -12,4 +13,7 @@ app.use(express.json());
 app.use(cors());
 app.use(router);
 
-app.listen(8080);
+mongoose.connect(process.env.MONGO_URI).then(() => {
+  console.log('Starting on port 8080');
+  app.listen(8080);
+});

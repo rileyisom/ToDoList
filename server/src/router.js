@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const express = require('express');
 
+const TaskModel = require('./models/TaskModel');
+
 const router = express.Router();
 
 // MIDDLEWARE
@@ -18,7 +20,6 @@ isLoggedIn = (req, res, next) => {
       }
     })
   }
-  res.send('sup');
 };
 
 // ROUTER ENDPOINTS
@@ -35,8 +36,36 @@ router.post('/login', (req, res) => {
   }
 });
 
-router.get('/tasks', isLoggedIn, (req, res) => {
-  res.send('sup');
+router.get('/tasks', isLoggedIn, async (req, res) => {
+  const tasks = await TaskModel.find();
+  console.log(tasks);
+  res.json(tasks);
+});
+
+router.post('/createTask', isLoggedIn, async (req, res) => {
+  const {text} = req.body;
+  const task = new TaskModel({
+    text,
+    completed: false,
+  });
+  const newTask = await task.save();
+  res.json(newTask);
+});
+
+router.put('/updateTask/:id', isLoggedIn, async (req, res) => {
+  const {id} = req.params;
+  const task = await TaskModel.findById(id);
+  task.completed = req.body.completed;
+  task.text = req.body.text;
+  newTask = await task.save();
+  res.json(newTask);
+});
+
+router.delete('/deleteTask/:id', isLoggedIn, async (req, res) => {
+  const {id} = req.params;
+  const task = await TaskModel.findById(id);
+  deletedTask = await task.remove();
+  res.status(204).json(deletedTask);
 });
 
 module.exports = router;
