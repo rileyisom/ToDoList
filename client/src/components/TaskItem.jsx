@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 import { useQueryClient, useMutation } from 'react-query';
+import { debounce } from 'lodash';
 import updateTaskRequest from '../api/updateTaskRequest';
 import deleteTaskRequest from '../api/deleteTaskRequest';
 
 export const TaskItem = ({task}) => {
+  const [text, setText] = useState(task.text);
   const queryClient = new useQueryClient();
 
   const {mutate: updateTask} = useMutation(
@@ -20,6 +22,17 @@ export const TaskItem = ({task}) => {
     }
   });
 
+  const debouncedUpdateTask = useCallback(debounce(updateTask, 1000), [updateTask]);
+
+  useEffect(() => {
+    if (text !== task.text) {
+      debouncedUpdateTask({
+        ...task,
+        text,
+      });
+    }
+  }, [text])
+
   return (
     <div>
       <input 
@@ -32,11 +45,8 @@ export const TaskItem = ({task}) => {
       />
       <input 
         type="text" 
-        value={task.text}
-        onChange={(e) => updateTask({
-          ...task,
-          text:e.target.value
-        })}
+        value={text}
+        onChange={(e) => setText(e.target.value)}
       />
       <button onClick={() => deleteTask(task)}>
         delete
