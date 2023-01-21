@@ -1,25 +1,28 @@
-import {useEffect, useState} from 'react';
-import {useQuery} from 'react-query';
-import ClipLoader from 'react-spinners/ClipLoader';
-import {TaskItem} from './components/TaskItem';
-import { CreateTaskForm } from './components/CreateTaskForm';
-import readTasksRequest from './api/readTasksRequest';
+import React, {useState, createContext, useContext } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
+
 import './App.css';
+import { TaskPage } from './pages/TaskPage';
+import { LoginPage } from './pages/LoginPage';
+
+export const TokenContext = createContext(null); 
+
+const ProtectedRoute = ({element}) => {
+  const [token, setToken] = useContext(TokenContext);
+  return token ? element() : <Navigate to='/login' />;
+} 
 
 function App() {
-  const {isLoading, data: tasks} = useQuery('tasks', readTasksRequest);
+  const [token, setToken] = useState(null);
 
   return (
     <div className="App"> 
-      <h1>Task List</h1>
-      {isLoading ? (
-        <ClipLoader size={100}/>
-      ) : (
-        tasks.map(task => (
-          <TaskItem task={task} key={task._id}/>
-        ))
-      )}
-      <CreateTaskForm/>
+      <TokenContext.Provider value={[token, setToken]}>
+        <Routes>
+          <Route path="/" element={<ProtectedRoute element={TaskPage} />} />
+          <Route path="login" element={<LoginPage/>} />
+        </Routes>
+      </TokenContext.Provider>
     </div>
   )
 }

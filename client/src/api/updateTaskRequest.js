@@ -1,6 +1,6 @@
-import { API_URL, token } from "./config"
+import { API_URL } from "./config"
 
-export default (task) => {
+export default (task, token) => {
   return fetch(`${API_URL}/updateTask/${task._id}`, {
     method: 'PUT',
     headers: {

@@ -3,20 +3,23 @@ import { useQueryClient, useMutation } from 'react-query';
 import { debounce } from 'lodash';
 import updateTaskRequest from '../api/updateTaskRequest';
 import deleteTaskRequest from '../api/deleteTaskRequest';
+import { useContext } from 'react';
+import { TokenContext } from '../App';
 
 export const TaskItem = ({task}) => {
-  const [text, setText] = useState(task.text);
   const queryClient = new useQueryClient();
+  const [text, setText] = useState(task.text);
+  const [token] = useContext(TokenContext);
 
   const {mutate: updateTask} = useMutation(
-    (updatedTask) => updateTaskRequest(updatedTask), {
+    (updatedTask) => updateTaskRequest(updatedTask, token), {
     onSettled: () => {
       queryClient.invalidateQueries('tasks');
     }
   });
 
   const {mutate: deleteTask} = useMutation(
-    (updatedTask) => deleteTaskRequest(updatedTask), {
+    (updatedTask) => deleteTaskRequest(updatedTask, token), {
     onSettled: () => {
       queryClient.invalidateQueries('tasks');
     }

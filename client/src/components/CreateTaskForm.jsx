@@ -1,13 +1,16 @@
 import React, {useState} from 'react';
+import { useContext } from 'react';
 import {useMutation, useQueryClient} from 'react-query';
 import createTaskRequest from '../api/createTaskRequest';
+import { TokenContext } from '../App';
 
 export const CreateTaskForm = () => {
   const queryClient = new useQueryClient();
   const [text, setText] = useState('');
+  const [token] = useContext(TokenContext);
 
   const {mutate: createTask} = useMutation(
-    (newTask) => createTaskRequest(newTask), {
+    (newTask) => createTaskRequest(newTask, token), {
     onSettled: () => {
       queryClient.invalidateQueries('tasks');
     }

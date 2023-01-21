@@ -1,6 +1,6 @@
-import { API_URL, token } from "./config"
+import { API_URL } from "./config"
 
-export default () => {
+export default (token) => {
   return fetch(`${API_URL}/tasks`, {
     method: 'GET',
     headers: {
