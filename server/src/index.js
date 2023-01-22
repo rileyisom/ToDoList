@@ -12,8 +12,10 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(router);
+app.use(express.static('./dist'));
+const port = parseInt(process.env.PORT) || 8080;
 
 mongoose.connect(process.env.MONGO_URI).then(() => {
-  console.log('Starting on port 8080');
-  app.listen(8080);
+  console.log(`Starting on port ${port}`);
+  app.listen(port);
 });

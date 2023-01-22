@@ -52,7 +52,7 @@ export const TaskItem = ({task}) => {
         onChange={(e) => setText(e.target.value)}
       />
       <button onClick={() => deleteTask(task)}>
-        delete
+        Delete
       </button>
     </div>
   )

@@ -36,10 +36,17 @@ router.post('/login', (req, res) => {
   }
 });
 
-router.get('/tasks', isLoggedIn, async (req, res) => {
-  const tasks = await TaskModel.find();
-  console.log(tasks);
-  res.json(tasks);
+router.get('/tasks/:filter', isLoggedIn, async (req, res) => {
+  const {filter} = req.params;
+  if(filter === "all") {
+    const tasks = await TaskModel.find();
+    console.log(tasks);
+    res.json(tasks);
+  } else {
+    const tasks = await TaskModel.find({completed: filter === "completed"});
+    console.log(tasks);
+    res.json(tasks);
+  }
 });
 
 router.post('/createTask', isLoggedIn, async (req, res) => {

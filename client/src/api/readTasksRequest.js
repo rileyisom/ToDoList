@@ -1,7 +1,7 @@
 import { API_URL } from "./config"
 
-export default (token) => {
-  return fetch(`${API_URL}/tasks`, {
+export default (filter, token) => {
+  return fetch(`${API_URL}/tasks/${filter}`, {
     method: 'GET',
     headers: {
       authorization: `Bearer ${token}`,

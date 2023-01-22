@@ -27,7 +27,7 @@ export const CreateTaskForm = () => {
       });
       setText('');
     }}>
-      <input onChange={e => setText(e.target.value)} value={text} type='text'/>
+      <input onChange={e => setText(e.target.value)} value={text} type='text' style={{'marginLeft': '20px'}}/>
       <button>Create</button>
     </form>
   );
